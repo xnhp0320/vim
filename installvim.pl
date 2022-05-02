@@ -32,11 +32,10 @@ if ( !-e "$vimdir/src/vim" && !-x "$vimdir/src/vim" ) {
 
     system("$pkgs") == 0 or die "fail to install pkgs: $?";
 
+    # YouCompleteMe has already dropped support of Python2
     my $conf = './configure \
     --with-features=huge \
     --enable-multibyte \
-    --enable-pythoninterp=yes \
-    --with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \
     --enable-python3interp=yes \
     --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
     --enable-perlinterp=yes \

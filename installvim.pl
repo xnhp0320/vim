@@ -71,3 +71,8 @@ if (!-e "$global_dir/gtags/gtags" && !-x "$global_dir/gtags/gtags") {
     system("make -j; make install") == 0 or die "fail to make global:$?";
     chdir $cwd;
 }
+
+system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim");
+
+system("cp ./vimrc ~/.vimrc");

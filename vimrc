@@ -580,8 +580,8 @@ vnoremap <S-F12>   :TrimSpaces<CR>
 call plug#begin()
 Plug 'junegunn/vim-easy-align'
 Plug 'https://github.com/ludovicchabant/vim-gutentags'
-Plug 'https://github.com/dense-analysis/ale'
-Plug 'Valloric/YouCompleteMe'
+"Plug 'https://github.com/dense-analysis/ale'
+"Plug 'Valloric/YouCompleteMe'
 
 call plug#end()
 

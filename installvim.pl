@@ -6,7 +6,8 @@ use File::Basename;
 use Cwd qw(getcwd);
 
 my $cwd = getcwd;
-my $vim="https://github.com/vim/vim/archive/refs/tags/v8.2.4815.tar.gz";
+my $vimversion = "v8.2.5050";
+my $vim="https://github.com/vim/vim/archive/refs/tags/" . $vimversion . ".tar.gz";
 my $vimtar = basename $vim;
 if (!-e $vimtar) {
     system("wget $vim") == 0 or die "fail to wget vim: $?";

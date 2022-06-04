@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use File::Basename;
 use Cwd qw(getcwd);
+use Config;
 
 my $cwd = getcwd;
 my $vimversion = "v8.2.5050";
@@ -25,29 +26,69 @@ if (!-d $vimdir) {
     system("tar -xf $vimtar") == 0 or die "fail to uncompress vim: $?";
 }
 
-if ( !-e "$vimdir/src/vim" && !-x "$vimdir/src/vim" ) {
-    chdir $vimdir;
-    my $pkgs = "
-    apt-get install -y libncurses5-dev python-dev python3-dev libperl-dev git
-    ";
-
-    system("$pkgs") == 0 or die "fail to install pkgs: $?";
-
-    # YouCompleteMe has already dropped support of Python2
-    my $conf = './configure \
-    --with-features=huge \
-    --enable-multibyte \
-    --enable-python3interp=yes \
-    --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
-    --enable-perlinterp=yes \
-    --enable-cscope \
-    --prefix=/usr/local';
-
-    system($conf) == 0 or die "configure vim fail: $?";
-    system("make -j") == 0 or die "make vim fail: $?";
-    system("make install") == 0 or die "make install vim fail: $?";
-    chdir $cwd;
+sub change_desert_color_scheme {
+    my $path = $_[0];
+    print $path, "\n";
+    die "file not exist" if (!-e $path);
+    do {
+        local $^I = ".bak";
+        local @ARGV = ($path);
+        while (<>) {
+            s/  hi Normal ctermfg=231(.*)/  hi Normal ctermfg=253$1/g;
+            print;
+        }
+    }
 }
+
+sub change_desert_color_scehme_mac {
+    change_desert_color_scheme "/usr/local/Cellar/vim/$vimversion/share/vim/vim82/colors/desert.vim";
+}
+
+sub change_desert_color_scheme_linux {
+    change_desert_color_scheme "$vimdir/runtime/colors/desert.vim";
+}
+
+sub install_vim_mac {
+    system("brew install vim") == 0 or die "fail to brew install";
+    change_desert_color_scheme_mac();
+}
+
+sub install_vim_linux {
+    if ( !-e "$vimdir/src/vim" && !-x "$vimdir/src/vim" ) {
+        chdir $vimdir;
+        my $pkgs = "
+        apt-get install -y libncurses5-dev python-dev python3-dev libperl-dev git
+        ";
+
+        system("$pkgs") == 0 or die "fail to install pkgs: $?";
+
+        # YouCompleteMe has already dropped support of Python2
+        my $conf = './configure \
+        --with-features=huge \
+        --enable-multibyte \
+        --enable-python3interp=yes \
+        --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
+        --enable-perlinterp=yes \
+        --enable-cscope \
+        --prefix=/usr/local';
+
+        system($conf) == 0 or die "configure vim fail: $?";
+        system("make -j") == 0 or die "make vim fail: $?";
+        change_desert_color_scheme_linux();
+        system("make install") == 0 or die "make install vim fail: $?";
+        chdir $cwd;
+    }
+}
+
+sub install_vim {
+    if ($Config{osname} eq "darwin") {
+        install_vim_mac();
+    } elsif ($^O eq "linux") {
+        install_vim_linux();
+    }
+}
+
+install_vim;
 
 my $global_url = "https://ftp.gnu.org/pub/gnu/global/global-6.6.8.tar.gz";
 my $global_file = basename $global_url;
@@ -73,7 +114,7 @@ if (!-e "$global_dir/gtags/gtags" && !-x "$global_dir/gtags/gtags") {
     chdir $cwd;
 }
 
-system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim");
+system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs " .
+        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim");
 
 system("cp ./vimrc ~/.vimrc");

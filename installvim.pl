@@ -45,7 +45,7 @@ sub change_desert_color_scehme_mac {
 }
 
 sub change_desert_color_scheme_linux {
-    change_desert_color_scheme "$vimdir/runtime/colors/desert.vim";
+    change_desert_color_scheme "runtime/colors/desert.vim";
 }
 
 sub install_vim_mac {

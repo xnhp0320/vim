@@ -7,7 +7,7 @@ use Cwd qw(getcwd);
 use Config;
 
 my $cwd = getcwd;
-my $vimversion = "v8.2.5050";
+my $vimversion = "v9.0.0565";
 my $vim="https://github.com/vim/vim/archive/refs/tags/" . $vimversion . ".tar.gz";
 my $vimtar = basename $vim;
 if (!-e $vimtar) {

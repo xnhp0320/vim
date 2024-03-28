@@ -632,3 +632,9 @@ let g:ale_c_cppcheck_options = ''
 let g:ale_cpp_cppcheck_options = ''
 
 set wildmode=list:longest
+
+function! ClearGutentagsCacheDir() abort
+    let l:path = gutentags#get_cachefile(b:gutentags_root, "")
+    execute '!rm -f ' . l:path . "/G*"
+    "echo 'rm -f ' . l:path . "/G*"
+endfunction

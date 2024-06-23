@@ -90,7 +90,7 @@ sub install_vim {
 
 install_vim;
 
-my $global_url = "https://ftp.gnu.org/pub/gnu/global/global-6.6.8.tar.gz";
+my $global_url = "https://ftp.gnu.org/pub/gnu/global/global-6.6.12.tar.gz";
 my $global_file = basename $global_url;
 
 if (!-e $global_file) {

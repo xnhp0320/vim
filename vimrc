@@ -582,6 +582,9 @@ Plug 'junegunn/vim-easy-align'
 Plug 'https://github.com/ludovicchabant/vim-gutentags'
 "Plug 'https://github.com/dense-analysis/ale'
 "Plug 'Valloric/YouCompleteMe'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'mileszs/ack.vim'
 
 call plug#end()
 
@@ -636,5 +639,93 @@ set wildmode=list:longest
 function! ClearGutentagsCacheDir() abort
     let l:path = gutentags#get_cachefile(b:gutentags_root, "")
     execute '!rm -f ' . l:path . "/G*"
-    "echo 'rm -f ' . l:path . "/G*"
 endfunction
+
+command! Cg :call ClearGutentagsCacheDir()
+
+if executable('pylsp')
+    " pip install python-lsp-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pylsp',
+        \ 'cmd': {server_info->['pylsp']},
+        \ 'allowlist': ['python'],
+        \ })
+endif
+
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+    "if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer> gr <plug>(lsp-references)
+    nmap <buffer> gi <plug>(lsp-implementation)
+    nmap <buffer> gt <plug>(lsp-type-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+    nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+    nmap <buffer> K <plug>(lsp-hover)
+    nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+    nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+
+    let g:lsp_format_sync_timeout = 1000
+    autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+
+    " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+if executable('rg')
+    let g:ackprg = 'rg --vimgrep'
+endif
+
+
+" Go to the previous location
+nnoremap [q :cprev<CR>
+" Go to the next location
+nnoremap ]q :cnext<CR>
+
+
+" Show the quickfix window
+nnoremap <Leader>co :copen<CR>
+" Hide the quickfix window
+nnoremap <Leader>cc :cclose<CR>
+
+
+function! BufSel(pattern)
+    let bufcount = bufnr("$")
+    let currbufnr = 1
+    let nummatches = 0
+    let firstmatchingbufnr = 0
+    while currbufnr <= bufcount
+        if(bufexists(currbufnr))
+            let currbufname = bufname(currbufnr)
+            if(match(currbufname, a:pattern) > -1)
+                echo currbufnr . ": ". bufname(currbufnr)
+                let nummatches += 1
+                let firstmatchingbufnr = currbufnr
+            endif
+        endif
+        let currbufnr = currbufnr + 1
+    endwhile
+    if(nummatches == 1)
+        execute ":buffer ". firstmatchingbufnr
+    elseif(nummatches > 1)
+        let desiredbufnr = input("Enter buffer number: ")
+        if(strlen(desiredbufnr) != 0)
+            execute ":buffer ". desiredbufnr
+        endif
+    else
+        echo "No matching buffers"
+    endif
+endfunction
+
+"Bind the BufSel() function to a user-command
+command! -nargs=1 Bs :call BufSel("<args>")
+"

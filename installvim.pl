@@ -114,7 +114,19 @@ if (!-e "$global_dir/gtags/gtags" && !-x "$global_dir/gtags/gtags") {
     chdir $cwd;
 }
 
-system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs " .
-        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim");
+if (!-e $ENV{"HOME"} . "/.vim/autoload/plug.vim") {
+    system("wget https://github.com/junegunn/vim-plug/archive/refs/tags/0.14.0.tar.gz");
+    system("tar xzf 0.14.0.tar.gz");
+    system("cp vim-plug-0.14.0/plug.vim ~/.vim/autoload/");
+}
 
-system("cp ./vimrc ~/.vimrc");
+system("cp ./vimrc ~/.vimrc") if !-e "~/.vimrc";
+
+my $home = $ENV{"HOME"};
+
+if (!-e "$home/.vim/syntax/p4.vim" && !-e "$home/.vim/ftdetect/p4.vim") {
+    system("mkdir -p ~/.vim/ftdetect");
+    system("mkdir -p ~/.vim/syntax");
+    system("echo \"au BufRead,BufNewFile *.p4      set filetype=p4\" >> ~/.vim/ftdetect/p4.vim");
+    system("cp p4.vim ~/.vim/syntax");
+}

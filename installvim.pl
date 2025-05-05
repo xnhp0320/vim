@@ -56,9 +56,12 @@ sub install_vim_mac {
 sub install_vim_linux {
     if ( !-e "$vimdir/src/vim" && !-x "$vimdir/src/vim" ) {
         chdir $vimdir;
+        `apt install python-dev`;
+
         my $pkgs = "
-        apt-get install -y libncurses5-dev python-dev python3-dev libperl-dev git
+        apt-get install -y libncurses5-dev python3-dev libperl-dev git
         ";
+
 
         system("$pkgs") == 0 or die "fail to install pkgs: $?";
 

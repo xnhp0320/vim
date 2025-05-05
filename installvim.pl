@@ -120,6 +120,7 @@ if (!-e "$global_dir/gtags/gtags" && !-x "$global_dir/gtags/gtags") {
 if (!-e $ENV{"HOME"} . "/.vim/autoload/plug.vim") {
     system("wget https://github.com/junegunn/vim-plug/archive/refs/tags/0.14.0.tar.gz");
     system("tar xzf 0.14.0.tar.gz");
+    system("mkdir -p ~/.vim/autoload");
     system("cp vim-plug-0.14.0/plug.vim ~/.vim/autoload/");
 }
 

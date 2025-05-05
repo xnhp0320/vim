@@ -585,6 +585,7 @@ Plug 'https://github.com/ludovicchabant/vim-gutentags'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'mileszs/ack.vim'
+Plug 'mtikekar/vim-bsv'
 
 call plug#end()
 

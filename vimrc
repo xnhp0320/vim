@@ -585,8 +585,9 @@ Plug 'https://github.com/ludovicchabant/vim-gutentags'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'mileszs/ack.vim'
-Plug 'mtikekar/vim-bsv'
-
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
 call plug#end()
 
 
@@ -729,4 +730,30 @@ endfunction
 
 "Bind the BufSel() function to a user-command
 command! -nargs=1 Bs :call BufSel("<args>")
-"
+
+function! AgSearch(word) abort
+    execute ':Ag ' . a:word
+endfunction
+
+function! AgSearchCursor() abort
+    let l:w = expand('<cword>')
+    call AgSearch(l:w)
+endfunction
+
+function! AgSearchWord() abort
+    let l:w = expand('<cword>')
+    call AgSearch('\b' . l:w . '\b')
+endfunction
+
+function! AgSearchClass() abort
+    let l:w = expand('<cword>')
+    call AgSearch('\b(class|struct)\s+' . l:w)
+endfunction
+
+nnoremap <Leader>s :call AgSearchCursor()
+nnoremap <Leader>sw :call AgSearchWord()
+nnoremap <Leader>sc :call AgSearchClass()
+
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <leader>N :NERDTreeToggle<CR>
+nnoremap <leader>f :NERDTreeFind<CR>

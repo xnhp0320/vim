@@ -732,7 +732,7 @@ endfunction
 command! -nargs=1 Bs :call BufSel("<args>")
 
 function! AgSearch(word) abort
-    execute ':Ag ' . a:word
+    call feedkeys(':Ag ' . a:word)
 endfunction
 
 function! AgSearchCursor() abort
@@ -750,9 +750,21 @@ function! AgSearchClass() abort
     call AgSearch('\b(class|struct)\s+' . l:w)
 endfunction
 
-nnoremap <Leader>s :call AgSearchCursor()
-nnoremap <Leader>sw :call AgSearchWord()
-nnoremap <Leader>sc :call AgSearchClass()
+function! AgSearchType() abort
+    let l:cursor = expand('<cword>')
+    let l:typename = ""
+    if l:cursor =~ '_t$'
+        let l:typename = substitute(l:cursor, '_t$', '_s', '')
+        call AgSearch('(} ' .. l:cursor .. '| ' .. l:typename . ')')
+    else
+        call AgSearch('} ' .. l:cursor)
+    endif
+endfunction
+
+nnoremap <Leader>s :call AgSearchCursor()<CR>
+nnoremap <Leader>sw :call AgSearchWord()<CR>
+nnoremap <Leader>sc :call AgSearchClass()<CR>
+nnoremap <Leader>st :call AgSearchType()<CR>
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <leader>N :NERDTreeToggle<CR>

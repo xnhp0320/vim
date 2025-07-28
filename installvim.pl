@@ -7,17 +7,18 @@ use Cwd qw(getcwd);
 use Config;
 
 my $cwd = getcwd;
-my $vimversion = "v9.1.1365";
+my $vimversion = "v9.1.1591";
 my $vim="https://github.com/vim/vim/archive/refs/tags/" . $vimversion . ".tar.gz";
 my $vimtar = basename $vim;
-if (!-e $vimtar) {
-    system("wget $vim") == 0 or die "fail to wget vim: $?";
-}
-
 my $vimdir;
 {
     $vimtar =~ /v(.*?)\.tar\.gz/;
     $vimdir = "vim-" . $1;
+    $vimtar = $vimdir . ".tar.gz";
+}
+
+if (!-e $vimtar) {
+    system("wget $vim") == 0 or die "fail to wget vim: $?";
 }
 
 #print $vimtar, " ", $vimdir, "\n";

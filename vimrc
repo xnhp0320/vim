@@ -586,7 +586,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
+"Plug 'preservim/nerdtree'
 call plug#end()
 
 
@@ -635,7 +635,7 @@ let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
 let g:ale_c_cppcheck_options = ''
 let g:ale_cpp_cppcheck_options = ''
 
-set wildmode=list:longest
+set wildmode=full:longest
 
 function! ClearGutentagsCacheDir() abort
     let l:path = gutentags#get_cachefile(b:gutentags_root, "")
@@ -736,3 +736,41 @@ nnoremap <Leader>st :call AgSearchType()<CR>
 "nnoremap <leader>n :NERDTreeFocus<CR>
 "nnoremap <leader>N :NERDTreeToggle<CR>
 "nnoremap <leader>f :NERDTreeFind<CR>
+"
+
+" Sometimes I use Ctrl-] a few times to read some code, perhaps navigating up
+" and down in the files I visit.  Then I want to get back to where I was
+" before, but Ctrl-O may require a lot of hits.
+"
+" Here we introduce an alternative, that goes back to the previous file, not
+" the previous position.  The default mapping is on C-U.
+"
+" If you would rather go back to the last piece of code you were editing, see
+" last_edit_marker.vim
+
+" BUG TODO: If there is no previous buffer, will loop forever!  We could check
+" to see if we don't move at all, then abort.
+function GoBackToRecentBuffer()
+  let startName = bufname('%')
+  let l:jumps = 0
+  while 1
+    execute "normal! \<C-O>"
+    let nowName = bufname('%')
+    if nowName != startName
+      break
+    endif
+    let l:jumps = l:jumps + 1
+    if l:jumps > 100
+        break
+    endif
+  endwhile
+endfunction
+
+" A bit much to override an important key?
+"nnoremap <silent> <C-O> :call GoBackToRecentBuffer()<Enter>
+" You can always use <C-I> if you need to go forwards again.
+" I never use this one:
+nnoremap <C-p> :call GoBackToRecentBuffer()<Enter>
+" You can use g; and g, to move between recent change points.
+"" Only in GVim:
+"nnoremap <silent> <C-BS> :call GoBackToRecentBuffer()<Enter>

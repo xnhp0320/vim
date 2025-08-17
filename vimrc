@@ -383,8 +383,11 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
+map <leader>j :bnext<cr>
+map <leader>k :bprevious<cr>
+let g:lastbuffer = 1
+map <leader>l :exe "b" . g:lastbuffer<CR>
+au BufLeave * let g:lastbuffer = bufnr()
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -467,9 +470,6 @@ endif
 map <leader>ss :setlocal spell!<cr>
 
 " Shortcuts using <leader>
-map <leader>sn ]s
-map <leader>sp [s
-map <leader>sa zg
 map <leader>s? z=
 
 
@@ -694,38 +694,6 @@ nnoremap ]q :cnext<CR>
 nnoremap <Leader>co :copen<CR>
 " Hide the quickfix window
 nnoremap <Leader>cc :cclose<CR>
-
-
-function! BufSel(pattern)
-    let bufcount = bufnr("$")
-    let currbufnr = 1
-    let nummatches = 0
-    let firstmatchingbufnr = 0
-    while currbufnr <= bufcount
-        if(bufexists(currbufnr))
-            let currbufname = bufname(currbufnr)
-            if(match(currbufname, a:pattern) > -1)
-                echo currbufnr . ": ". bufname(currbufnr)
-                let nummatches += 1
-                let firstmatchingbufnr = currbufnr
-            endif
-        endif
-        let currbufnr = currbufnr + 1
-    endwhile
-    if(nummatches == 1)
-        execute ":buffer ". firstmatchingbufnr
-    elseif(nummatches > 1)
-        let desiredbufnr = input("Enter buffer number: ")
-        if(strlen(desiredbufnr) != 0)
-            execute ":buffer ". desiredbufnr
-        endif
-    else
-        echo "No matching buffers"
-    endif
-endfunction
-
-"Bind the BufSel() function to a user-command
-command! -nargs=1 Bs :call BufSel("<args>")
 
 function! AgSearch(word) abort
     call feedkeys(':Ag ' . a:word)

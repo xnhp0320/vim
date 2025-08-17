@@ -207,7 +207,6 @@ set autoread
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = ","
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -383,10 +382,10 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
-map <leader>j :bnext<cr>
-map <leader>k :bprevious<cr>
+nnoremap ]b :bnext<cr>
+nnoremap [b :bprevious<cr>
 let g:lastbuffer = 1
-map <leader>l :exe "b" . g:lastbuffer<CR>
+noremap <leader>l :exe "b" . g:lastbuffer<CR>
 au BufLeave * let g:lastbuffer = bufnr()
 
 " Useful mappings for managing tabs
@@ -394,7 +393,11 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+
+map ]t :tabnext<cr>
+map [t :tabprev<cr>
+map ]a :next<cr>
+map [a :next<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -730,6 +733,6 @@ nnoremap <Leader>sw :call AgSearchWord()<CR>
 nnoremap <Leader>sc :call AgSearchClass()<CR>
 nnoremap <Leader>st :call AgSearchType()<CR>
 
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <leader>N :NERDTreeToggle<CR>
-nnoremap <leader>f :NERDTreeFind<CR>
+"nnoremap <leader>n :NERDTreeFocus<CR>
+"nnoremap <leader>N :NERDTreeToggle<CR>
+"nnoremap <leader>f :NERDTreeFind<CR>

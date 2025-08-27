@@ -13,7 +13,7 @@ my $vimtar = basename $vim;
 my $vimdir;
 {
     $vimtar =~ /v(.*?)\.tar\.gz/;
-    $vimdir = "v-" . $1;
+    $vimdir = "vim-" . $1;
     $vimtar = $vimdir . ".tar.gz";
 }
 

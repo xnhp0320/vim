@@ -14,7 +14,6 @@ my $vimdir;
 {
     $vimtar =~ /v(.*?)\.tar\.gz/;
     $vimdir = "vim-" . $1;
-    $vimtar = $vimdir . ".tar.gz";
 }
 
 print $vimtar, " ", $vimdir, "\n";
@@ -41,8 +40,8 @@ sub change_desert_color_scheme {
     }
 }
 
-sub change_desert_color_scehme_mac {
-    change_desert_color_scheme "/usr/local/Cellar/vim/$vimversion/share/vim/vim82/colors/desert.vim";
+sub change_desert_color_scheme_mac {
+    change_desert_color_scheme "/opt/homebrew/Cellar/vim/9.1.1700/share/vim/vim91/colors/desert.vim"
 }
 
 sub change_desert_color_scheme_linux {
@@ -50,7 +49,7 @@ sub change_desert_color_scheme_linux {
 }
 
 sub install_vim_mac {
-    system("brew install vim") == 0 or die "fail to brew install";
+    system("brew install vim cscope") == 0 or die "fail to brew install";
     change_desert_color_scheme_mac();
 }
 
@@ -114,7 +113,7 @@ if (!-d $global_dir) {
 if (!-e "$global_dir/gtags/gtags" && !-x "$global_dir/gtags/gtags") {
     chdir $global_dir;
     system("./configure --prefix=/usr/local") == 0 or die "fail to configure global:$?";
-    system("make -j; make install") == 0 or die "fail to make global:$?";
+    system("make -j; sudo make install") == 0 or die "fail to make global:$?";
     chdir $cwd;
 }
 

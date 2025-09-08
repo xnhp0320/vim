@@ -225,7 +225,7 @@ source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
 " Turn on the Wild menu
-set wildmenu
+set wildmenu wildoptions=pum
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
@@ -579,13 +579,13 @@ vnoremap <S-F12>   :TrimSpaces<CR>
 call plug#begin()
 Plug 'junegunn/vim-easy-align'
 Plug 'https://github.com/ludovicchabant/vim-gutentags'
-"Plug 'https://github.com/dense-analysis/ale'
-"Plug 'Valloric/YouCompleteMe'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
 call plug#end()
 
 

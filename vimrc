@@ -579,13 +579,16 @@ vnoremap <S-F12>   :TrimSpaces<CR>
 call plug#begin()
 Plug 'junegunn/vim-easy-align'
 Plug 'https://github.com/ludovicchabant/vim-gutentags'
-Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
+" NOTE: the order is important! otherwise, append text will not be trimed with their prefixes!!!!!
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 call plug#end()
 
 

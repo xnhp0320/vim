@@ -42,7 +42,7 @@ sub change_desert_color_scheme_linux {
 }
 
 sub install_vim_mac {
-    system("brew install vim cscope") == 0 or die "fail to brew install";
+    system("brew install vim cscope universal-ctags") == 0 or die "fail to brew install";
     change_desert_color_scheme_mac();
 }
 

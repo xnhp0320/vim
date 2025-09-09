@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use v5.24;
 use strict;
 use warnings;
@@ -7,25 +7,6 @@ use Cwd qw(getcwd);
 use Config;
 
 my $cwd = getcwd;
-my $vimversion = "v9.1.1600";
-my $vim="https://github.com/vim/vim/archive/refs/tags/" . $vimversion . ".tar.gz";
-my $vimtar = basename $vim;
-my $vimdir;
-{
-    $vimtar =~ /v(.*?)\.tar\.gz/;
-    $vimdir = "vim-" . $1;
-}
-
-print $vimtar, " ", $vimdir, "\n";
-if (!-e $vimtar) {
-    system("wget $vim") == 0 or die "fail to wget vim: $?";
-}
-
-
-if (!-d $vimdir) {
-    system("tar -xf $vimtar") == 0 or die "fail to uncompress vim: $?";
-}
-
 sub change_desert_color_scheme {
     my $path = $_[0];
     print $path, "\n";
@@ -40,8 +21,20 @@ sub change_desert_color_scheme {
     }
 }
 
+sub find {
+    my $homebrew = "/opt/homebrew/";
+    my $file = shift;
+    open my $fh,  "-|", "find $homebrew -name $file" or die $!;
+    my $loc = <$fh>;
+    chomp($loc);
+    close $fh;
+    return $loc;
+}
+
 sub change_desert_color_scheme_mac {
-    change_desert_color_scheme "/opt/homebrew/Cellar/vim/9.1.1700/share/vim/vim91/colors/desert.vim"
+    my $loc = find("desert.vim");
+    say "desert.vim is located at ", $loc;
+    change_desert_color_scheme $loc;
 }
 
 sub change_desert_color_scheme_linux {
@@ -54,6 +47,21 @@ sub install_vim_mac {
 }
 
 sub install_vim_linux {
+    my $vimversion = "v9.1.1600";
+    my $vim="https://github.com/vim/vim/archive/refs/tags/" . $vimversion . ".tar.gz";
+    my $vimtar = basename $vim;
+    my $vimdir;
+    {
+        $vimtar =~ /v(.*?)\.tar\.gz/;
+        $vimdir = "vim-" . $1;
+    }
+    print $vimtar, " ", $vimdir, "\n";
+    if (!-e $vimtar) {
+        system("wget $vim") == 0 or die "fail to wget vim: $?";
+    }
+    if (!-d $vimdir) {
+        system("tar -xf $vimtar") == 0 or die "fail to uncompress vim: $?";
+    }
     if ( !-e "$vimdir/src/vim" && !-x "$vimdir/src/vim" ) {
         chdir $vimdir;
         `apt install python-dev`;

@@ -724,9 +724,9 @@ function! AgSearchType() abort
     let l:typename = ""
     if l:cursor =~ '_t$'
         let l:typename = substitute(l:cursor, '_t$', '_s', '')
-        call AgSearch('(} ' .. l:cursor .. '| ' .. l:typename . ')')
+        call AgSearch('(} ' . l:cursor . '| ' . l:typename . ')')
     else
-        call AgSearch('} ' .. l:cursor)
+        call AgSearch('} ' . l:cursor)
     endif
 endfunction
 
